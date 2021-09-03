@@ -1,0 +1,94 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+dependencies {
+    //gradle sdk
+    implementation gradleApi()
+
+    //添加gradle
+    implementation 'com.android.tools.build:gradle:3.2.0'
+    /**
+     * implementation
+     */
+//    compileOnly files('libs/soot.jar')
+    compileOnly files('libs/soot-trunk3.jar')
+//    compileOnly files('libs/soot-trunk3.jar')
+//    compileOnly files('libs/soot-3.3.0.jar')
+    compileOnly files('libs/dom4j-1.6.1.jar')
+
+    compileOnly files('libs/commons-collections4-4.0.jar')
+    compileOnly files('libs/bcel-6.0-SNAPSHOT.jar')
+    compileOnly files('libs/bcel-5.2.jar')
+//    compileOnly files('libs/asm-util-5.0.jar')
+//    compileOnly files('libs/asm-tree-5.0.jar')
+//    compileOnly files('libs/asm-debug-all-5.2.jar')
+//    compileOnly files('libs/asm-commons-5.0.jar')
+//    compileOnly files('libs/asm-analysis-5.0.jar')
+    compileOnly files('libs/asm.jar')
+//    compileOnly files('libs/asm-5.2.jar')
+//    compileOnly files('libs/asm-ASM_5_2-branch.zip')
+    compileOnly files('libs/bcel-5.2.zip')
+    compileOnly files('libs/android-support-v4.jar')
+    compileOnly files('libs/android.jar')
+
+}
+
+task sourceJar(type: Jar){
+    //源代码一起打包
+    from 'build/classes/java/main'
+
+    //加入第三方jar 这个是字节码文件
+    //以下是需要打包进jar包中的内容
+    from(project.zipTree('libs/android.jar'))
+    from(project.zipTree('libs/android-support-v4.jar.zip'))
+    from(project.zipTree('libs/android-support-v4.jar'))
+    from(project.zipTree('libs/asm.jar'))
+//    from(project.zipTree('libs/asm-5.2.jar'))
+//    from(project.zipTree('libs/asm-analysis-5.0.jar'))
+//    from(project.zipTree('libs/asm-commons-5.0.jar'))
+//    from(project.zipTree('libs/asm-debug-all-5.2.jar'))
+//    from(project.zipTree('libs/asm-tree-5.0.jar'))
+//    from(project.zipTree('libs/asm-util-5.0.jar'))
+    from(project.zipTree('libs/bcel-5.2.jar'))
+    from(project.zipTree('libs/bcel-5.2.zip'))
+    from(project.zipTree('libs/bcel-6.0-SNAPSHOT.jar'))
+//    from(project.zipTree('libs/soot.jar'))
+//    from(project.zipTree('libs/soot-trunk3.jar'))
+    from(project.zipTree('libs/soot-trunk3.jar'))
+//    from(project.zipTree('libs/soot-3.3.0.jar'))
+    from(project.zipTree('libs/dom4j-1.6.1.jar'))
+    from(project.zipTree('libs/commons-collections4-4.0.jar'))
+
+
+    from("src/main/resources") {
+        include 'META-INF/**'
+    }
+}
+
+////包含第三方jar
+artifacts {
+    archives sourceJar
+}
+group = 'com.feng.plugins'
+version = '1.0.0'
+//打包上传到本地
+uploadArchives{
+    repositories {
+        flatDir{
+            dirs '../repo/'
+        }
+    }
+}
+
+
+
+
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
+    println('使用utf8编程')
+}
